@@ -69,6 +69,7 @@
 
 > ## Our project demo picture
 > <img align="center" src="./src/img/to-do-list.png" alt="logo" width="100%"  height="auto" />
+
   <br/>
 
 - [Live Demo Link](https://mutai-gilbert.github.io/Minimanilist-To-Do-list/)
