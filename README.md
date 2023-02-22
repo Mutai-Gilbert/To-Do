@@ -2,9 +2,6 @@
 
 <div align="center">
 
-  <img src="murple_logo.png" alt="logo" width="140"  height="auto" />
-  <br/>
-
   <h3><b>Microverse README Template</b></h3>
 
 </div>
@@ -68,10 +65,11 @@
 ## 🚀 Live Demo <a name="live-demo"></a>
 
 > ## Our project demo picture
-> <img align="center" src="project_demo.PNG" alt="logo" width="100%"  height="auto" />
+> <img align="center" src="./src/img/to-do-list.png" alt="logo" width="100%"  height="auto" />
+
   <br/>
 
-- [Live Demo Link](https://mutai-gilbert.github.io/Minimanilist-To-Do-list/)
+- [Live Demo Link](NOT YET AVAILABLE)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

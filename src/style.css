@@ -1,3 +1,87 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Balsamiq Sans', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ul,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: 1rem;
+}
+
 body {
-  background-color: bisque;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 30px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+}
+
+header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 30px 0;
+  justify-content: space-between;
+  width: 90%;
+}
+
+.add-your-list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 12px 0;
+  justify-content: space-between;
+  width: 90%;
+}
+
+.input-list {
+  width: 95%;
+  height: 30px;
+  border: 2px solid black;
+  border-radius: 5px;
+}
+
+ul {
+  display: flex;
+  flex-direction: column;
+  margin: 12px 0;
+  width: 90%;
+  gap: 12px;
+  justify-content: space-between;
+  list-style-type: none;
+}
+
+.todos {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6;
+  width: 100%;
+}
+
+.clear-all-completed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  margin: 24px 0;
+  padding: 10px;
 }
