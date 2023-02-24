@@ -3,48 +3,19 @@ import './style.css';
 const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 const theTodos = document.querySelector('.the-todos');
 
-function removeTasks() {
-  // remove the task from the dom
-  const todoToBeDeleted = document.querySelector('.todos');
-  const parentElement = todoToBeDeleted.parentNode;
-  parentElement.removeChild(todoToBeDeleted);
+function removeTask(taskIndex) {
+  // remove the task from the DOM
+  const todoToBeDeleted = document.querySelector(`span[task-index="${taskIndex}"]`);
+  const parentElement = todoToBeDeleted.parentNode.parentNode;
+  parentElement.remove();
   // remove the task from the local storage
-
-  const idTask = todoToBeDeleted.getAttribute('task-index');
-  const parseId = parseInt(idTask, 10);
-  const index = tasks.findIndex((task) => task.index === parseId);
+  const index = tasks.findIndex((task) => task.index === taskIndex);
   tasks.splice(index, 1);
-
   localStorage.setItem('tasks', JSON.stringify(tasks));
-}
-function editTask(event) {
-  const todoToBeEdited = event.target.closest('.todos');
-  const contentSpan = todoToBeEdited.querySelector('span');
-  const inputField = document.createElement('input');
-  inputField.type = 'text';
-  inputField.value = contentSpan.innerText;
-  todoToBeEdited.firstElementChild.insertBefore(inputField, contentSpan);
-  contentSpan.style.display = 'none';
-
-  inputField.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      const idTask = todoToBeEdited.getAttribute('task-index');
-      const index = tasks.findIndex((task) => task.index === parseInt(idTask, 10));
-      if (index !== -1) {
-        tasks[index].description = inputField.value;
-        contentSpan.innerText = inputField.value;
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-      }
-      inputField.parentNode.removeChild(inputField);
-      contentSpan.style.display = 'inline';
-      localStorage.setItem('tasks', JSON.stringify(tasks));
-    }
-  });
 }
 
 function displayTasks() {
   theTodos.innerHTML = '';
-  localStorage.setItem('tasks', JSON.stringify(tasks));
 
   tasks.forEach((task) => {
     const li = document.createElement('li');
@@ -56,7 +27,30 @@ function displayTasks() {
     iElement.classList.add('bi', 'bi-app');
 
     const contentSpan = document.createElement('span');
-    contentSpan.innerText = task.description;
+    if (task.editMode) {
+      const inputField = document.createElement('input');
+      inputField.type = 'text';
+      inputField.value = task.description;
+      inputField.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const description = inputField.value.trim();
+          if (description !== '') {
+            task.description = description;
+            task.editMode = false;
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            displayTasks();
+          }
+        }
+      });
+      li.appendChild(inputField);
+      inputField.focus();
+    } else {
+      contentSpan.innerText = task.description;
+      contentSpan.setAttribute('task-index', task.index);
+      contentSpan.style.display = 'inline-block';
+      li.appendChild(contentSpan);
+    }
     contentSpan.setAttribute('task-index', task.index);
 
     const secondDiv = document.createElement('div');
@@ -87,8 +81,9 @@ function displayTasks() {
     edit.addEventListener('click', (event) => {
       editTask(event);
     });
-    trash.addEventListener('click', (event) => {
-      removeTasks(event);
+    trash.addEventListener('click', () => {
+      const taskIndex = parseInt(contentSpan.getAttribute('task-index'), 10);
+      removeTask(taskIndex);
     });
     firstDiv.appendChild(iElement);
     firstDiv.appendChild(contentSpan);
@@ -99,6 +94,42 @@ function displayTasks() {
     li.appendChild(secondDiv);
     theTodos.appendChild(li);
   });
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+function editTask(event) {
+  const todoToBeEdited = event.target.closest('.todos');
+  const contentSpan = todoToBeEdited.querySelector('span');
+  const inputField = document.createElement('input');
+  inputField.type = 'text';
+  inputField.value = contentSpan.innerText;
+  todoToBeEdited.firstElementChild.insertBefore(inputField, contentSpan);
+  contentSpan.style.display = 'none';
+
+  inputField.addEventListener('keypress', (e) => {
+    // If the key pressed is Enter, update the to-do item
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const description = inputField.value;
+      const inputId = inputField.id;
+      console.log(inputId);
+      // Filter out the to-do item being edited from the to-do list
+      const index = parseInt(inputId.replace('input', ''), 10);
+      const itemIndex = tasks.findIndex((item) => item.index === index);
+      const updatedItem = { ...tasks[itemIndex], description };
+      const newList = [...tasks.slice(0, itemIndex), updatedItem, ...tasks.slice(itemIndex + 1)];
+
+      // If the to-do task is not empty, update the to-do list and save it to local storage
+      if (description !== '') {
+        localStorage.setItem('tasks', JSON.stringify(newList));
+        tasks.splice(itemIndex, 1, updatedItem);
+        displayTasks();
+      } else {
+        // If the to-do task is empty, display an error message
+        document.querySelector('.emptylist').style.display = 'block';
+      }
+    }
+  });
 }
 
 // function to add a new book
@@ -106,7 +137,7 @@ const form = document.querySelector('#add-your-list');
 form.addEventListener('submit', (e) => {
   e.preventDefault();
   const description = form.todo.value;
-  const index = tasks.length;
+  const index = tasks.length > 0 ? tasks[tasks.length - 1].index + 1 : 0;
   tasks.push({ description, index });
   displayTasks();
   form.reset();
