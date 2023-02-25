@@ -63,6 +63,14 @@ ul {
   list-style-type: none;
 }
 
+.tick-task {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: none;
+}
+
 .todos {
   display: flex;
   align-items: center;
