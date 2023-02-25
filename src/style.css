@@ -62,6 +62,7 @@ ul {
   justify-content: space-between;
   list-style-type: none;
 }
+
 .tick-task {
   display: flex;
   align-items: center;
