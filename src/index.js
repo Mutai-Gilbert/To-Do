@@ -3,23 +3,29 @@ import './style.css';
 const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 const theTodos = document.querySelector('.the-todos');
 
-function removeTask(taskIndex) {
+function removeTask(taskIndex, liElement) {
   // remove the task from the DOM
-  const todoToBeDeleted = document.querySelector(`span[task-index="${taskIndex}"]`);
-  const parentElement = todoToBeDeleted.parentNode.parentNode;
+  const contentSpan = liElement.querySelector('span');
+  const parentElement = contentSpan.closest('li');
   parentElement.remove();
+
   // remove the task from the local storage
   const index = tasks.findIndex((task) => task.index === taskIndex);
   tasks.splice(index, 1);
+  tasks.forEach((task, i) => {
+    task.index = i;
+  });
+
   localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
 function displayTasks() {
   theTodos.innerHTML = '';
 
-  tasks.forEach((task) => {
+  tasks.forEach((task, i) => {
     const li = document.createElement('li');
     li.classList.add('todos');
+    task.index = i;
 
     const firstDiv = document.createElement('div');
 
@@ -65,6 +71,7 @@ function displayTasks() {
 
     const trash = document.createElement('i');
     trash.classList.add('bi', 'bi-trash');
+    trash.setAttribute('trash-id', task.index)
     trash.style.display = 'none';
 
     secondElement.addEventListener('click', () => {
@@ -83,7 +90,8 @@ function displayTasks() {
     });
     trash.addEventListener('click', () => {
       const taskIndex = parseInt(contentSpan.getAttribute('task-index'), 10);
-      removeTask(taskIndex);
+      const liElement = trash.closest('li');
+      removeTask(taskIndex, liElement);
     });
     firstDiv.appendChild(iElement);
     firstDiv.appendChild(contentSpan);
@@ -111,18 +119,12 @@ function editTask(event) {
     if (e.key === 'Enter') {
       e.preventDefault();
       const description = inputField.value;
-      const inputId = inputField.id;
-      console.log(inputId);
-      // Filter out the to-do item being edited from the to-do list
-      const index = parseInt(inputId.replace('input', ''), 10);
-      const itemIndex = tasks.findIndex((item) => item.index === index);
-      const updatedItem = { ...tasks[itemIndex], description };
-      const newList = [...tasks.slice(0, itemIndex), updatedItem, ...tasks.slice(itemIndex + 1)];
-
-      // If the to-do task is not empty, update the to-do list and save it to local storage
+      const taskIndex = parseInt(contentSpan.getAttribute('task-index'), 10);
+      const index = tasks.findIndex((task) => task.index === taskIndex);
       if (description !== '') {
-        localStorage.setItem('tasks', JSON.stringify(newList));
-        tasks.splice(itemIndex, 1, updatedItem);
+        tasks[index].description = description;
+        tasks[index].editMode = false;
+        localStorage.setItem('tasks', JSON.stringify(tasks));
         displayTasks();
       } else {
         // If the to-do task is empty, display an error message
@@ -137,8 +139,9 @@ const form = document.querySelector('#add-your-list');
 form.addEventListener('submit', (e) => {
   e.preventDefault();
   const description = form.todo.value;
-  const index = tasks.length > 0 ? tasks[tasks.length - 1].index + 1 : 0;
-  tasks.push({ description, index });
+  const index = tasks.length;
+  const completed = false;
+  tasks.push({ description, index, completed });
   displayTasks();
   form.reset();
 });
