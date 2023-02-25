@@ -2,9 +2,6 @@
 
 <div align="center">
 
-  <img src="" alt="logo" width="140"  height="auto" />
-  <br/>
-
   <h3><b>Microverse README Template</b></h3>
 
 </div>
@@ -72,7 +69,7 @@
 
   <br/>
 
-- [Live Demo Link](https://mutai-gilbert.github.io/Minimanilist-To-Do-list/)
+- [Live Demo Link](NOT YET AVAILABLE)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
