@@ -54,7 +54,7 @@ function displayTasks() {
   tasks.forEach((task, i) => {
     const li = document.createElement('li');
     li.classList.add('todos');
-    task.index = i;
+    task.index = i + 1;
 
     const firstDiv = document.createElement('div');
     firstDiv.classList.add('tick-task');
@@ -139,7 +139,7 @@ const form = document.querySelector('#add-your-list');
 form.addEventListener('submit', (e) => {
   e.preventDefault();
   const description = form.todo.value;
-  const index = tasks.length;
+  const index = tasks.length + 1;
   const completed = false;
   tasks.push({ description, index, completed });
   displayTasks();
