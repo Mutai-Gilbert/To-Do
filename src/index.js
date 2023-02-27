@@ -1,17 +1,15 @@
 import './style.css';
 import TODO from './todo.js';
 
-class todoList {
+class TodoList {
   constructor() {
     this.tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    console.log(this.tasks);
     this.theTodos = document.querySelector('.the-todos');
     this.displayTasks();
   }
 
   removeTask(taskIndex, liElement) {
     // remove the task from the DOM
-    console.log(taskIndex);
     this.contentSpan = liElement.querySelector('span');
     this.parentElement = this.contentSpan.closest('li');
     this.parentElement.remove();
@@ -149,7 +147,7 @@ class todoList {
   }
 }
 
-const todolist = new todoList();
+const todolist = new TodoList();
 
 // function to add a new book
 const form = document.querySelector('#add-your-list');
